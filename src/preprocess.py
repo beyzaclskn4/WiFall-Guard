@@ -26,3 +26,16 @@ def plot_comparison(raw, clean, title="CSI Signal Analysis"):
     plt.title(title)
     plt.legend()
     plt.show()
+    
+    if __name__ == "__main__":
+     DATA_PATH = "data/annotations.csv" 
+    
+    # 1. Yükle
+    raw = load_csi_data(DATA_PATH)
+    
+    # 2. Temizle (100Hz örnekleme hızı, 10Hz kesme frekansı)
+    clean = butter_lowpass_filter(raw, cutoff=10, fs=100)
+    
+    # 3. Görselleştir
+    plot_comparison(raw, clean)
+    print("Preprocessing completed successfully.")
