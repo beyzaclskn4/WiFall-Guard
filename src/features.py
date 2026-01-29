@@ -26,3 +26,12 @@ def create_feature_matrix(signal, window_size=100):
         all_features.append(features)
         
     return np.array(all_features)
+
+if __name__ == "__main__":
+    # Test amaçlı dummy (sahte) sinyal üretimi
+    sample_signal = np.random.normal(0, 1, 1000)
+    
+    feature_matrix = create_feature_matrix(sample_signal, window_size=100)
+    
+    print(f"Sinyal işlendi. Matris boyutu: {feature_matrix.shape}")
+    print("Özellik çıkarımı başarıyla tamamlandı.")
