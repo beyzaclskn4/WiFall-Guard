@@ -19,3 +19,9 @@ def train_model(X_train, y_train):
 
 #neden randomforest kullnadık: Random Forest, yüksek doğruluk oranları sunan, aşırı öğrenmeye karşı dayanıklı ve çeşitli veri türlerinde iyi performans gösteren bir topluluk öğrenme algoritmasıdır. Ayrıca, hiperparametre ayarlamalarıyla esnekliği artırılabilir ve yorumlanabilir sonuçlar sağlar.
 #wifi gibi gürültülü verilerde de iyi performans gösterir.
+def evaluate_model(model, X_test, y_test):
+    """Modelin başarısını ölçer ve raporlar."""
+    predictions = model.predict(X_test)
+    accuracy = accuracy_score(y_test, predictions)
+    report = classification_report(y_test, predictions)
+    return accuracy, report
