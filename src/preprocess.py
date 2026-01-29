@@ -17,3 +17,12 @@ def butter_lowpass_filter(data, cutoff, fs, order=5):
     b, a = butter(order, normal_cutoff, btype='low', analog=False)
     y = filtfilt(b, a, data)
     return y
+
+def plot_comparison(raw, clean, title="CSI Signal Analysis"):
+    """Ham ve filtrelenmiş sinyalleri görselleştirir."""
+    plt.figure(figsize=(12, 5))
+    plt.plot(raw[:1000], label='Raw (Noisy)', alpha=0.4)
+    plt.plot(clean[:1000], label='Clean (Filtered)', color='red', linewidth=1.5)
+    plt.title(title)
+    plt.legend()
+    plt.show()
