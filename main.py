@@ -1,3 +1,4 @@
+import pandas as pd
 import numpy as np
 from src.preprocess import load_csi_data, butter_lowpass_filter
 from src.features import create_feature_matrix
@@ -12,11 +13,18 @@ def run_pipeline(file_path):
     raw_signal = load_csi_data(file_path)
     clean_signal = butter_lowpass_filter(raw_signal, cutoff=10, fs=100)
     
-    # 2. Özellikleri çıkar (Feature Matrix)
+    # 2. Özellikleri çıkar
     X = create_feature_matrix(clean_signal, window_size=WINDOW_SIZE)
     
-    # 3. Etiketleri oluştur (Şimdilik test için rastgele)
-    y = np.random.randint(0, 2, len(X))
+    # 3. GERÇEK ETİKETLERİ YÜKLE (CSV'den)
+    # Varsayıyoruz ki CSV'de 'label' isminde bir sütun var (0: Normal, 1: Düşme)
+    try:
+        df_labels = pd.read_csv(file_path)
+        # Sinyal pencerelendiği için etiket sayısını X'e uydurmamız gerekir
+        y = df_labels['label'].values[:len(X)] 
+    except:
+        print("Uyarı: Gerçek etiketler yüklenemedi, test modunda devam ediliyor.")
+        y = np.random.randint(0, 2, len(X))
     
     return X, y
 
