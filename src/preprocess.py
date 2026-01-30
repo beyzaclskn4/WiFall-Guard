@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from scipy.signal import butter, filtfilt
+import matplotlib.pyplot as plt
 
 def load_csi_data(file_path):
     # Veriyi başlık olmadan oku
@@ -17,24 +18,10 @@ def butter_lowpass_filter(data, cutoff, fs, order=5):
     y = filtfilt(b, a, data)
     return y
 
-def plot_comparison(raw, clean, title="CSI Signal Analysis"):
-    """Ham ve filtrelenmiş sinyalleri görselleştirir."""
-    plt.figure(figsize=(12, 5))
-    plt.plot(raw[:1000], label='Raw (Noisy)', alpha=0.4)
-    plt.plot(clean[:1000], label='Clean (Filtered)', color='red', linewidth=1.5)
-    plt.title(title)
-    plt.legend()
-    plt.show()
-    
-    if __name__ == "__main__":
-     DATA_PATH = "data/annotations.csv" 
-    
-    # 1. Yükle
-    raw = load_csi_data(DATA_PATH)
-    
-    # 2. Temizle (100Hz örnekleme hızı, 10Hz kesme frekansı)
-    clean = butter_lowpass_filter(raw, cutoff=10, fs=100)
-    
-    # 3. Görselleştir
-    plot_comparison(raw, clean)
-    print("Preprocessing completed successfully.")
+def run_pipeline(file_path):
+    """Sinyali yükler ve filtreden geçirir."""
+    # 1. Ham sinyali yükle
+    raw_signal = load_csi_data(file_path)
+    # 2. 10 Hz cutoff frekansı ile temizle
+    clean_signal = butter_lowpass_filter(raw_signal, cutoff=10, fs=100)
+    return clean_signal
