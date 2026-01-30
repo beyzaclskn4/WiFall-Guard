@@ -13,7 +13,7 @@ def prepare_data(feature_matrix, labels):
 
 def train_model(X_train, y_train):
     """Random Forest modelini eğitir."""
-    model = RandomForestClassifier(n_estimators=100, random_state=42)
+    model = RandomForestClassifier(n_estimators=200,max_depth=10,min_samples_split=2, random_state=42)
     model.fit(X_train, y_train)
     return model
 
