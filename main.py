@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import joblib
 from src.preprocess import load_csi_data, butter_lowpass_filter
 from src.features import create_feature_matrix
 from src.model import prepare_data, train_model, evaluate_model
@@ -41,3 +42,7 @@ if __name__ == "__main__":
     
     print(f"\nİşlem Tamamlandı! \nModel Doğruluğu: %{acc*100:.2f}")
     print("\nDetaylı Rapor:\n", report)
+    
+    # Modeli 'brain' olarak kaydet
+joblib.dump(model, "models/wifi_fall_model.pkl")
+print("\nModel 'models/wifi_fall_model.pkl' olarak kaydedildi!")
