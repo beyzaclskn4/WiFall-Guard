@@ -20,3 +20,18 @@ if __name__ == "__main__":
     df = pd.read_csv(DATA_PATH, header=None)
     y_raw = df.iloc[:, 1].values[:len(X)] 
     y = LabelEncoder().fit_transform(y_raw)
+    
+    # Veriyi ölçeklendir (Scaling)
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X)
+    
+    # Eğitim ve Test setlerine ayır, modeli eğit
+    X_train, X_test, y_train, y_test = prepare_data(X_scaled, y)
+    clf = train_model(X_train, y_train)
+    
+    # Sonuçları yazdır ve modeli dondur
+    acc, report = evaluate_model(clf, X_test, y_test)
+    print(f"Model Doğruluğu: %{acc*100:.2f}\n{report}")
+    
+    joblib.dump(clf, f"{MODEL_DIR}/wifi_fall_model.pkl")
+    print(f"Başarıyla tamamlandı! Model {MODEL_DIR} içine kaydedildi.")
