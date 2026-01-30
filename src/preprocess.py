@@ -1,19 +1,12 @@
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
 from scipy.signal import butter, filtfilt
 
 def load_csi_data(file_path):
-    # Veriyi başlık olmadan (veya varsa başlığıyla) oku
-    df = pd.read_csv(file_path, header=None) 
-    
-    # Sadece İLK SÜTUNU (index 0) alıyoruz çünkü sayılar orada
-    # errors='coerce' diyerek kazara araya karışan metinleri NaN yaparız
-    signal = pd.to_numeric(df.iloc[:, 0], errors='coerce')
-    
-    # NaN olanları (yani 'fall', 'benja' gibi kelimeleri) temizle
-    signal = signal.dropna().values
-    
+    # Veriyi başlık olmadan oku
+    df = pd.read_csv(file_path, header=None)
+    # İlk sütundaki değerleri sayıya çevir, kelimeleri (fall, benja) NaN yap ve sil
+    signal = pd.to_numeric(df.iloc[:, 0], errors='coerce').dropna().values
     return signal
  
 def butter_lowpass_filter(data, cutoff, fs, order=5):
