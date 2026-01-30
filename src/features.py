@@ -15,16 +15,13 @@ def extract_signal_features(signal_segment):
     
     return np.array(features)
 
-def create_feature_matrix(signal, window_size=100):
-    """Sinyali pencerelere böler ve özellik matrisi oluşturur."""
+def create_feature_matrix(signal, window_size=100, step_size=20): # Step eklendi
     all_features = []
-    
-    # Sinyali belirlenen pencere boyutuyla tara
-    for i in range(0, len(signal) - window_size, window_size):
+    # Sinyali 100'er atlayarak değil, 20'şer kaydırarak oku (Daha fazla veri!)
+    for i in range(0, len(signal) - window_size, step_size):
         window = signal[i : i + window_size]
         features = extract_signal_features(window)
         all_features.append(features)
-        
     return np.array(all_features)
 
 if __name__ == "__main__":
