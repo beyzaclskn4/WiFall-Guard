@@ -19,3 +19,17 @@ def run_pipeline(file_path):
     y = np.random.randint(0, 2, len(X))
     
     return X, y
+
+if __name__ == "__main__":
+    print("--- WiFall-Guard Sistemi Başlatılıyor ---")
+    
+    # Süreci çalıştır
+    X, y = run_pipeline(DATA_PATH)
+    
+    # Eğit ve Değerlendir
+    X_train, X_test, y_train, y_test = prepare_data(X, y)
+    model = train_model(X_train, y_train)
+    acc, report = evaluate_model(model, X_test, y_test)
+    
+    print(f"\nİşlem Tamamlandı! \nModel Doğruluğu: %{acc*100:.2f}")
+    print("\nDetaylı Rapor:\n", report)
