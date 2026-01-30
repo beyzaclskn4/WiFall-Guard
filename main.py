@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import joblib
+import os
 from src.preprocess import load_csi_data, butter_lowpass_filter
 from src.features import create_feature_matrix
 from src.model import prepare_data, train_model, evaluate_model
@@ -10,21 +11,24 @@ DATA_PATH = "data/annotations.csv"
 WINDOW_SIZE = 100
 
 def run_pipeline(file_path):
-    # 1. Veriyi yükle ve temizle
     raw_signal = load_csi_data(file_path)
     clean_signal = butter_lowpass_filter(raw_signal, cutoff=10, fs=100)
-    
-    # 2. Özellikleri çıkar
     X = create_feature_matrix(clean_signal, window_size=WINDOW_SIZE)
     
-    # 3. GERÇEK ETİKETLERİ YÜKLE (CSV'den)
-    # Varsayıyoruz ki CSV'de 'label' isminde bir sütun var (0: Normal, 1: Düşme)
     try:
-        df_labels = pd.read_csv(file_path)
-        # Sinyal pencerelendiği için etiket sayısını X'e uydurmamız gerekir
-        y = df_labels['label'].values[:len(X)] 
-    except:
-        print("Uyarı: Gerçek etiketler yüklenemedi, test modunda devam ediliyor.")
+        # CSV'yi oku, 2. sütundaki 'fall', 'walk' gibi metinleri al
+        df = pd.read_csv(file_path, header=None)
+        labels_raw = df.iloc[:, 1].values[:len(X)] # 2. sütun (index 1)
+        
+        # Makine öğrenmesi metinleri anlamaz, sayıya çevirmeliyiz (Label Encoding)
+        # fall -> 1, walk -> 0 gibi
+        from sklearn.preprocessing import LabelEncoder
+        le = LabelEncoder()
+        y = le.fit_transform(labels_raw)
+        
+        print(f"-> {len(y)} adet GERÇEK etiket yüklendi. Sınıflar: {le.classes_}")
+    except Exception as e:
+        print(f"-> Hata oluştu: {e}. Rastgele veriye dönülüyor.")
         y = np.random.randint(0, 2, len(X))
     
     return X, y
